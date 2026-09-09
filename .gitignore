@@ -1,0 +1,15 @@
+# --- Python Build Artifacts ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+
+# --- VS Code Settings ---
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
