@@ -127,6 +127,10 @@ def render_stage2():
                     is_dls=is_dls,
                     dls_target=target if is_dls else None
                 )
+                if grp == "Group A":
+                    st.session_state.stats_a = dict(target_stats)
+                else:
+                    st.session_state.stats_b = dict(target_stats)
                 st.toast(f"Result: {result_str}!")
                 st.session_state.current_match_idx += 1
                 st.rerun()
@@ -138,19 +142,23 @@ def render_stage2():
 
         top3_a = df_a.iloc[:GROUP_STAGE_DIRECT_QUALIFIERS]["Team"].tolist()
         top3_b = df_b.iloc[:GROUP_STAGE_DIRECT_QUALIFIERS]["Team"].tolist()
-        fourth_a = df_a.iloc[GROUP_STAGE_DIRECT_QUALIFIERS]
-        fourth_b = df_b.iloc[GROUP_STAGE_DIRECT_QUALIFIERS]
+        fourth_a = str(df_a.iloc[GROUP_STAGE_DIRECT_QUALIFIERS]["Team"])
+        fourth_b = str(df_b.iloc[GROUP_STAGE_DIRECT_QUALIFIERS]["Team"])
+
+        st_4a = st.session_state.stats_a[fourth_a]
+        st_4b = st.session_state.stats_b[fourth_b]
 
         st.markdown("### 🔍 4th-Place Wildcard Tiebreaker")
         w_col1, w_col2 = st.columns(2)
+        w_col1, w_col2 = st.columns(2)
         with w_col1:
-            st.metric(f"Group A 4th: {fourth_a['Team']}", f"{fourth_a['Pts']} Pts", f"NRR: {fourth_a['NRR']:+.3f}")
+            st.metric(f"Group A 4th: {fourth_a}", f"{st_4a['Pts']} Pts", f"NRR: {st_4a['NRR']:+.3f}")
         with w_col2:
-            st.metric(f"Group B 4th: {fourth_b['Team']}", f"{fourth_b['Pts']} Pts", f"NRR: {fourth_b['NRR']:+.3f}")
+            st.metric(f"Group B 4th: {fourth_b}", f"{st_4b['Pts']} Pts", f"NRR: {st_4b['NRR']:+.3f}")
 
-        metric_a = (fourth_a['Pts'], fourth_a['W'], fourth_a['NRR'])
-        metric_b = (fourth_b['Pts'], fourth_b['W'], fourth_b['NRR'])
-        wildcard = fourth_a['Team'] if metric_a > metric_b else fourth_b['Team']
+        metric_a = (st_4a['Pts'], st_4a['W'], float(st_4a['NRR']))
+        metric_b = (st_4b['Pts'], st_4b['W'], float(st_4b['NRR']))
+        wildcard = fourth_a if metric_a > metric_b else fourth_b
 
         st.info(f"🎉 **{wildcard}** advances to the Super 7 as the best 4th-placed side!")
 
