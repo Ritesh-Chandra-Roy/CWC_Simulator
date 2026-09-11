@@ -18,7 +18,7 @@ The app features dynamic match scorecards, real-time standings, authentic Net Ru
 
 ## Installation & Setup
 
-1. **Clone the repository:**
+**1. Clone the repository:**
 
 **2. Install dependencies:**
 Ensure you have Python 3.9+ installed, then run:
