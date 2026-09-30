@@ -1,8 +1,8 @@
 import streamlit as st
-import random
 from constants import GROUP_STAGE_DIRECT_QUALIFIERS, GROUP_STAGE_WILDCARD_POS
 from helpers import get_standings_df, style_standings_table, update_table_stats, init_team_stats
 from dls_calculator import open_dls_dialog
+from fixture_scheduler import generate_super7_fixtures
 
 def render_stage2():
     idx = st.session_state.current_match_idx
@@ -165,13 +165,6 @@ def render_stage2():
         if st.button("Proceed to Super 7 Stage", type="primary"):
             st.session_state.super7_teams = top3_a + top3_b + [wildcard]
             st.session_state.super7_stats = init_team_stats(st.session_state.super7_teams)
-
-            s7_fix = []
-            for i in range(len(st.session_state.super7_teams)):
-                for j in range(i + 1, len(st.session_state.super7_teams)):
-                    s7_fix.append(("Super 7", st.session_state.super7_teams[i], st.session_state.super7_teams[j]))
-            random.shuffle(s7_fix)
-
-            st.session_state.super7_fixtures = s7_fix
+            st.session_state.super7_fixtures = generate_super7_fixtures(st.session_state.super7_teams)
             st.session_state.stage = "SUPER_7"
             st.rerun()
