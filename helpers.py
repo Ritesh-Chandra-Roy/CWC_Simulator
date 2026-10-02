@@ -66,16 +66,30 @@ def update_table_stats(stats_dict, t1, t2, s1, w1, o1_faced, o1_max, s2, w2, o2_
     st2["NRR"] = calculate_nrr(st2["RS"], st2["BF"], st2["RC"], st2["BB"])
 
 def get_standings_df(stats_dict):
-    data = []
-    for team, st_data in stats_dict.items():
-        data.append({
-            "Team": team, "P": st_data["P"], "W": st_data["W"], "L": st_data["L"],
-            "T": st_data["T"], "Pts": st_data["Pts"], "NRR": round(st_data["NRR"], 3)
+    sorted_teams = sorted(
+        stats_dict.items(),
+        key=lambda item: (
+            int(item[1].get("Pts", 0)),
+            int(item[1].get("W", 0)),
+            float(item[1].get("NRR", 0.0))
+        ),
+        reverse=True  # Highest first
+    )
+    rows = []
+    for rank, (team, st_data) in enumerate(sorted_teams, start=1):
+        raw_nrr = float(st_data.get("NRR", 0.0))
+        rows.append({
+            "Pos": rank,
+            "Team": str(team),
+            "P": int(st_data["P"]),
+            "W": int(st_data["W"]),
+            "L": int(st_data["L"]),
+            "T": int(st_data["T"]),
+            "Pts": int(st_data["Pts"]),
+            "NRR": f"{raw_nrr:+.3f}"
         })
-    df = pd.DataFrame(data)
-    df.sort_values(by=["Pts", "W", "NRR"], ascending=[False, False, False]).reset_index(drop=True)
-    df.index = range(1, len(df) + 1)
-    df.index.name = "Pos"
+    df = pd.DataFrame(rows)
+    df = df.set_index("Pos")
     return df
 
 def style_standings_table(df, qualify_cutoff=4, wildcard_pos=None):

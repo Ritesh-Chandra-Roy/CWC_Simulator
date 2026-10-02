@@ -42,7 +42,7 @@ elif st.session_state.stage == "GROUP_STAGE":
     render_stage2()
 
 elif st.session_state.stage == "SUPER_7":
-    render_stage3
+    render_stage3()
 
 elif st.session_state.stage == "KNOCKOUTS":
-    render_stage4
+    render_stage4()

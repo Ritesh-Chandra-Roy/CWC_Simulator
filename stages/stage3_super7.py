@@ -114,6 +114,7 @@ def render_stage3():
                     is_dls=is_dls,
                     dls_target=target if is_dls else None
                 )
+                st.session_state.super7_stats = dict(st.session_state.super7_stats)
                 st.toast(f"Result: {result_str}!")
                 st.session_state.super7_match_idx += 1
                 st.rerun()

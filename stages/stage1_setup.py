@@ -2,6 +2,7 @@ import streamlit as st
 import random
 from constants import QUALIFIER_SEEDS, CORE_TEAMS_GROUP_A, CORE_TEAMS_GROUP_B
 from helpers import init_team_stats
+from fixture_scheduler import generate_group_stage_fixtures
 
 def render_stage1():
     st.subheader("Step 1: Select 2 Final Qualifiers")
@@ -30,16 +31,9 @@ def render_stage1():
         st.session_state.group_b_teams = CORE_TEAMS_GROUP_B + [team_b]
         st.session_state.stats_a = init_team_stats(st.session_state.group_a_teams)
         st.session_state.stats_b = init_team_stats(st.session_state.group_b_teams)
-
-        fixtures = []
-        for i in range(len(st.session_state.group_a_teams)):
-            for j in range(i + 1, len(st.session_state.group_a_teams)):
-                fixtures.append(("Group A", st.session_state.group_a_teams[i], st.session_state.group_a_teams[j]))
-        for i in range(len(st.session_state.group_b_teams)):
-            for j in range(i + 1, len(st.session_state.group_b_teams)):
-                fixtures.append(("Group B", st.session_state.group_b_teams[i], st.session_state.group_b_teams[j]))
-        random.shuffle(fixtures)
-
-        st.session_state.fixtures = fixtures
+        st.session_state.fixtures = generate_group_stage_fixtures(
+            st.session_state.group_a_teams,
+            st.session_state.group_b_teams
+        )
         st.session_state.stage = "GROUP_STAGE"
         st.rerun()
